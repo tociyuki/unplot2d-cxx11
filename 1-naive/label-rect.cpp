@@ -1,6 +1,14 @@
 #include <algorithm>
 #include "unplot2d.hpp"
 
+// This program assumes that the text labeling area
+// contains only text. The text labeling area is outside
+// of the plot area. In other words, it is outside of
+// `frame[0]` rectangle.
+
+// Y-axis label is drawn at left side frame by pi/2 counter-
+// clockwise rotation. To detect it, we connect bounding
+// box vertically. After that, we select most left one.
 void
 unplot2d_type::label_rect_yaxis_detect (cv::Mat& gray_img)
 {
@@ -30,6 +38,9 @@ unplot2d_type::label_rect_yaxis_detect (cv::Mat& gray_img)
     label_rect_yaxis_rotation ();
 }
 
+// It is unsufficient selecting most left one.
+// Because, if Y-axis is out, we have unexpected scale label of Y-axis.
+// So that, we check their rotation of gryphs by aspect ratio.
 void
 unplot2d_type::label_rect_yaxis_rotation (void)
 {
@@ -50,6 +61,10 @@ unplot2d_type::label_rect_yaxis_rotation (void)
     }
 }
 
+// X-axis label is drawn at bottom side of frame.
+// This program assumes that the image has both X-axis label
+// and X-axis scale labels. To detect it, we connect bounding
+// box horizontally. After that, we select most bottom one.
 void
 unplot2d_type::label_rect_xaxis_detect (cv::Mat& gray_img)
 {
@@ -80,6 +95,8 @@ unplot2d_type::label_rect_xaxis_detect (cv::Mat& gray_img)
     }
 }
 
+// All other labels in the labeling area are the scale labels.
+// We connect for each scale labels.
 void
 unplot2d_type::label_rect_scale_detect (cv::Mat& gray_img)
 {

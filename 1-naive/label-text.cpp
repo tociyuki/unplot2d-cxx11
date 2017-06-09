@@ -1,5 +1,8 @@
 #include "unplot2d.hpp"
 
+// Reads text of labels by tesseract-OCR library.
+// Only Y-axis label is drawn by pi/2 counterclockwise rotation.
+
 void
 unplot2d_type::label_yaxis_read (tesseract::TessBaseAPI& tess, cv::Mat& gray_img)
 {
@@ -52,6 +55,8 @@ unplot2d_type::tesseract_call (tesseract::TessBaseAPI& api,
     api.Clear ();
 }
 
+// tesseract basic API returns text as "foo\n\n".
+// strips tail "\n".
 std::string
 unplot2d_type::chomp (std::string const& s)
 {

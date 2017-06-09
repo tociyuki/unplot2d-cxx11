@@ -1,5 +1,7 @@
 #include "unplot2d.hpp"
 
+// for major axis between scale ticks and scale label.
+
 void
 linear_least_square_method_type::clear (void)
 {

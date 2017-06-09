@@ -1,5 +1,9 @@
 #include "unplot2d.hpp"
 
+// Matchs peaks in data.
+//
+// see Savitzky, Golay, ``Smoothing and Differentiation of Data by Simplified
+// Least Squares Procedures'', Analytical Chemistry (1964)
 void
 unplot2d_type::peak1i_match (std::vector<int>& value, std::vector<int>& peaks)
 {

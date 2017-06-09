@@ -1,5 +1,6 @@
 #include "unplot2d.hpp"
 
+// Calculates normalized correlation between two gray-scale images.
 double
 unplot2d_type::correlation (cv::Mat& mat0, cv::Mat& mat1)
 {

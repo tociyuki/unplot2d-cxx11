@@ -1,5 +1,7 @@
 #include "unplot2d.hpp"
 
+// for `cv::matchTemplate` result.
+
 bool
 unplot2d_type::peak2f_check (cv::Mat& img, int x, int y, float threshold)
 {

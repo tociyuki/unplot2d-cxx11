@@ -1,6 +1,10 @@
 #include <algorithm>
 #include "unplot2d.hpp"
 
+// This program assumes that the plot area has a single kind of data
+// marks only.
+
+// choose a ROI mark image in the plot area for template matching.
 void
 unplot2d_type::mark_choose (cv::Mat& img)
 {
@@ -15,6 +19,7 @@ unplot2d_type::mark_choose (cv::Mat& img)
     }
 }
 
+// performs template matching for data marks.
 void
 unplot2d_type::data_mark_match (cv::Mat& img)
 {
@@ -22,6 +27,7 @@ unplot2d_type::data_mark_match (cv::Mat& img)
     int const yoffset = mark.rows / 2;
     cv::Mat result;
     cv::matchTemplate (img, mark, result, cv::TM_CCORR_NORMED);
+    // TODO: How we deside it automatically!
     float threshold = 0.7f;
     for (int y = 0; y < result.rows; ++y) {
         for (int x = 0; x < result.cols; ++x) {
