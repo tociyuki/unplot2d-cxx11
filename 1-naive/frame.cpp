@@ -49,29 +49,36 @@ unplot2d_type::frame_check (cv::Mat& img, int const i)
     // `contours[i]` has nesting components or it is not frame.
     if (hierarchy[i][2] < 0)
         return;
+    // bounding rectagle of approx may be outside of frame ractangle.
+    cv::Rect outer_rect = cv::boundingRect (approx);
+    // check bounding rectangle of nesting components.
+    cv::Rect inner_rect;
     for (int i1 = hierarchy[i][2]; i1 >= 0; i1 = hierarchy[i1][0]) {
-        // `contours[i]` has large nesting components.
-        double area1 = cv::contourArea (contours[i1], false);
-        if (area1 <= img.cols * img.rows / 4)
-            continue;
-        // And one of them can be approximated to the rectangle too.
-        cv::vector<cv::Point> approx1;
-        double epsilon1 = 0.01 * cv::arcLength (contours[i1], true);
-        cv::approxPolyDP (cv::Mat (contours[i1]), approx1, epsilon1, true);
-        if (approx1.size () == 4) {
-            // All tests are passed.
-            // We put into the member `frame` and `frame_idx`.
-            frame.push_back (cv::boundingRect (contours[i]));
-            cv::Rect r0 = cv::boundingRect (approx);
-            cv::Rect r1 = cv::boundingRect (approx1);
-            cv::Rect r ((r0.x + r1.x) / 2, (r0.y + r1.y) / 2,
-                        (r0.width + r1.width) / 2,
-                        (r0.height + r1.height) / 2);
-            frame.push_back (r);
-            frame_idx.push_back (i);
-            frame_idx.push_back (i1);
-            return;
+        cv::Rect r = cv::boundingRect (contours[i1]);
+        // we correct nesting components in the outer_rect.
+        if ((outer_rect & r) == r) {
+            if (inner_rect.width == 0)
+                inner_rect = r;
+            else
+                inner_rect |= r;
         }
     }
+    // inner_rect must be almost same as the outer_rect or it is not frame.
+    if (outer_rect.width - inner_rect.width > 24 || outer_rect.height - inner_rect.height > 24) {
+        return;
+    }
+    // Now we believe catching the frame.
+    // We need center_rect to major data marks later.
+    cv::Rect center_rect ((outer_rect.x + inner_rect.x) / 2,
+        (outer_rect.y + inner_rect.y) / 2,
+        (outer_rect.width + inner_rect.width) / 2,
+        (outer_rect.height + inner_rect.height) / 2);
+    // frame[0] is bounding box of frame with ticks and data marks on it.
+    frame.push_back (cv::boundingRect (contours[i]));
+    // frame[1] is center_rect.
+    frame.push_back (center_rect);
+    // for shortcut frame[0] comarisons and debug uses.
+    frame_idx.push_back (i);
+    frame_idx.push_back (hierarchy[i][2]);
     return;
 }
