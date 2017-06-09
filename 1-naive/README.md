@@ -23,8 +23,8 @@ opencv 2.4 or later and tesseract-ocr 3.03.02 or later are required to build.
 If you build on Ubuntu linux box:
 
     $ sudo apt-get install libopencv-dev libtesseract-dev
-    $ make unplot2
-    $ ./unplot2 example.png
+    $ make unplot2d
+    $ ./unplot2d example.png
     "d/nm","Tc/K"
     0.991561,2.49928
     1.00211,2.56151

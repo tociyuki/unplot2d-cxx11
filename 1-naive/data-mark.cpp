@@ -5,7 +5,7 @@ void
 unplot2d_type::mark_choose (cv::Mat& img)
 {
     for (int i = 0; i < bound.size (); ++i) {
-        if (frame[0] == bound[i]
+        if (i == frame_idx[0]
                 || (frame[0] & bound[i]) != bound[i]
                 || abs (bound[i].width - bound[i].height) > 8
                 || std::max (bound[i].width, bound[i].height) > 36)

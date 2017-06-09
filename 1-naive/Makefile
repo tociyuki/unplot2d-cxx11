@@ -1,4 +1,4 @@
-PROG=unplot2
+PROG=unplot2d
 OBJECTS=main.o \
 	frame.o \
 	data-mark.o \
