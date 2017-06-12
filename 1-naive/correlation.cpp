@@ -1,3 +1,4 @@
+#include <cmath>
 #include "unplot2d.hpp"
 
 // Calculates normalized correlation between two gray-scale images.

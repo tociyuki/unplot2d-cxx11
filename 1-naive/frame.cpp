@@ -44,7 +44,7 @@ unplot2d_type::frame_check (cv::Mat& img, int const i)
     cv::vector<cv::Point> approx;
     double epsilon = 0.01 * cv::arcLength (contours[i], true);
     cv::approxPolyDP (cv::Mat (contours[i]), approx, epsilon, true);
-    if (approx.size () != 4)
+    if (approx.size () != 4 || ! cv::isContourConvex (approx))
         return;
     // `contours[i]` has nesting components or it is not frame.
     if (hierarchy[i][2] < 0)
@@ -80,5 +80,4 @@ unplot2d_type::frame_check (cv::Mat& img, int const i)
     // for shortcut frame[0] comarisons and debug uses.
     frame_idx.push_back (i);
     frame_idx.push_back (hierarchy[i][2]);
-    return;
 }

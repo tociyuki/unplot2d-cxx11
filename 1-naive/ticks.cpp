@@ -128,6 +128,8 @@ unplot2d_type::ticks_yaxis_score (cv::Mat& bin_img,
 }
 
 // Calculates the average interval as the tick period.
+// We confirm that the intervals are all integer multiples of
+// the minimum interval.
 double
 unplot2d_type::ticks_interval_average (int frame_size,
     std::vector<int>& peaks, std::vector<int>& peak_idx)
