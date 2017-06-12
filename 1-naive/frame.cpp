@@ -1,3 +1,4 @@
+#include <cmath>
 #include "unplot2d.hpp"
 
 // The shape of frame in the plot 2d graph is an large rectangle
@@ -33,6 +34,17 @@ unplot2d_type::frame_detect (cv::Mat& bin_img)
     }
 }
 
+// cosine between vectors $ r_{10} $ and $ r_{20} $.
+static double
+cosine_vector2d (cv::Point pt1, cv::Point pt2, cv::Point pt0)
+{
+    double const x1 = pt1.x - pt0.x;
+    double const y1 = pt1.y - pt0.y;
+    double const x2 = pt2.x - pt0.x;
+    double const y2 = pt2.y - pt0.y;
+    return (x1 * x2 + y1 * y2) / std::sqrt ((x1 * x1 + y1 * y1) * (x2 * x2 + y2 * y2) + 1.0e-10);
+}
+
 void
 unplot2d_type::frame_check (cv::Mat& img, int const i)
 {
@@ -45,6 +57,15 @@ unplot2d_type::frame_check (cv::Mat& img, int const i)
     double epsilon = 0.01 * cv::arcLength (contours[i], true);
     cv::approxPolyDP (cv::Mat (contours[i]), approx, epsilon, true);
     if (approx.size () != 4 || ! cv::isContourConvex (approx))
+        return;
+    // verteces of the approx must be pi / 2 or it is not frame.
+    // see https://github.com/opencv/opencv/blob/master/samples/cpp/squares.cpp
+    double max_cosine = 0.0;
+    for (int i = 2; i < 5; ++i) {
+        double const x = std::fabs (cosine_vector2d (approx[i % 4], approx[i - 2], approx[i - 1]));
+        max_cosine = std::max (max_cosine, x);
+    }
+    if (max_cosine >= 0.3)
         return;
     // `contours[i]` has nesting components or it is not frame.
     if (hierarchy[i][2] < 0)
