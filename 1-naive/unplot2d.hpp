@@ -77,6 +77,11 @@ struct linear_least_square_method_type {
     double sum_xx;
     double sum_y;
     double sum_yx;
+    // for Kahan summation algorithm carry low-order bits
+    double carry_x;
+    double carry_xx;
+    double carry_y;
+    double carry_yx;
     double grad;
     double offset;
     void clear (void);

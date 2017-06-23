@@ -1,4 +1,5 @@
 #include "unplot2d.hpp"
+#include "kahan-sum.hpp"
 
 // for major axis between scale ticks and scale label.
 
@@ -10,16 +11,20 @@ linear_least_square_method_type::clear (void)
     sum_xx = 0.0;
     sum_y  = 0.0;
     sum_yx = 0.0;
+    carry_x  = 0.0;
+    carry_xx = 0.0;
+    carry_y  = 0.0;
+    carry_yx = 0.0;
 }
 
 void
 linear_least_square_method_type::put (double x, double y)
 {
     ++n;
-    sum_x  += x;
-    sum_xx += x * x;
-    sum_y  += y;
-    sum_yx += y * x;
+    kahan_sum (x,     sum_x,  carry_x);     //sum_x  += x;
+    kahan_sum (x * x, sum_xx, carry_xx);    //sum_xx += x * x;
+    kahan_sum (y,     sum_y,  carry_y);     //sum_y  += y;
+    kahan_sum (y * x, sum_yx, carry_yx);    //sum_yx += y * x;
 }
 
 void
